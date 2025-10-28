@@ -1,0 +1,3511 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 在<head>部分添加Google验证代码 -->
+    <meta name="baidu-site-verification" content="codeva-FmQId0rS9n" />
+    <title>Rin的秘密花园</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --accent-color: #9b59b6;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --light-bg: rgba(250, 240, 230, 0.95);
+            --dark-text: #2c3e50;
+            --light-text: #7f8c8d;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+            --sidebar-width: 280px;
+            --font-size-sm: 0.85rem;
+            --font-size-md: 0.95rem;
+            --font-size-lg: 1.1rem;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            color: var(--dark-text);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            position: relative;
+            font-size: var(--font-size-md);
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.7);
+            z-index: -1;
+        }
+        
+        /* 背景装饰元素 */
+        .bg-decoration {
+            position: fixed;
+            z-index: -2;
+            opacity: 0.3;
+        }
+        
+        .bg-circle {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #3498db 0%, transparent 70%);
+            top: 10%;
+            right: 10%;
+        }
+        
+        .bg-square {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(45deg, #9b59b6, #e74c3c);
+            transform: rotate(45deg);
+            bottom: 15%;
+            left: 5%;
+        }
+        
+        .bg-triangle {
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-bottom: 260px solid #2ecc71;
+            top: 5%;
+            left: 15%;
+            opacity: 0.2;
+        }
+        
+        .app-container {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+        
+        .member-sidebar {
+            width: var(--sidebar-width);
+            background: var(--light-bg);
+            padding: 15px;
+            box-shadow: var(--shadow);
+            height: 100vh;
+            overflow-y: auto;
+            position: fixed;
+            left: 0;
+            top: 0;
+            border-right: 1px solid rgba(0, 0, 0, 0.05);
+            z-index: 100;
+            transition: var(--transition);
+        }
+        
+        .member-list-title {
+            font-size: 1.4rem;
+            color: var(--dark-text);
+            margin-bottom: 20px;
+            text-align: center;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .online-count {
+            text-align: center;
+            padding: 10px;
+            background: rgba(46, 204, 113, 0.15);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-weight: bold;
+            color: #27ae60;
+            border: 1px solid rgba(46, 204, 113, 0.2);
+            font-size: var(--font-size-sm);
+        }
+        
+        .member-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+        }
+        
+        .member-item:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateX(3px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .member-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 12px;
+            font-size: 1rem;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .member-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        
+        .member-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .member-name {
+            font-weight: bold;
+            color: var(--dark-text);
+            font-size: var(--font-size-md);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .member-title {
+            font-size: var(--font-size-sm);
+            color: var(--light-text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .member-uid {
+            font-size: 0.75rem;
+            color: #95a5a6;
+            margin-top: 2px;
+        }
+        
+        .member-status {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-left: 5px;
+            flex-shrink: 0;
+        }
+        
+        .status-online {
+            background: var(--secondary-color);
+        }
+        
+        .status-offline {
+            background: #95a5a6;
+        }
+        
+        .admin-title {
+            color: var(--danger-color);
+            font-weight: bold;
+        }
+        
+        .super-admin-title {
+            background-color: #a8e6a3;
+            color: white;
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            transition: var(--transition);
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+            background: var(--light-bg);
+            border-radius: var(--border-radius);
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            color: var(--dark-text);
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 12px;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            color: var(--dark-text);
+            margin: 20px 0 12px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--primary-color);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--light-text);
+            margin-bottom: 20px;
+        }
+        
+        .garden-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 35px;
+        }
+        
+        .garden-section {
+            background: var(--light-bg);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .garden-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary-color);
+        }
+        
+        .garden-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            color: var(--dark-text);
+            font-size: 1.2rem;
+        }
+        
+        .section-title span {
+            margin-right: 10px;
+            font-size: 1.3rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: auto;
+            background: var(--light-bg);
+            border-radius: var(--border-radius);
+            color: var(--light-text);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            font-size: var(--font-size-md);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            margin-top: 15px;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            font-size: var(--font-size-md);
+            font-weight: bold;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-primary {
+            background: var(--primary-color);
+        }
+        
+        .btn-secondary {
+            background: var(--secondary-color);
+        }
+        
+        .btn-accent {
+            background: var(--accent-color);
+        }
+        
+        .btn-danger {
+            background: var(--danger-color);
+        }
+        
+        .btn-warning {
+            background: var(--warning-color);
+        }
+        
+        .sidebar-auth-form {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .form-group {
+            margin-bottom: 12px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: var(--dark-text);
+            font-size: var(--font-size-sm);
+        }
+        
+        .required-field::after {
+            content: " *";
+            color: var(--danger-color);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: var(--font-size-sm);
+            font-family: 'Arial', sans-serif;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .form-control.error {
+            border-color: var(--danger-color);
+        }
+        
+        .error-message {
+            color: var(--danger-color);
+            font-size: 0.75rem;
+            margin-top: 4px;
+            display: none;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+        }
+        
+        .btn-login {
+            background: var(--secondary-color);
+            padding: 8px 12px;
+            font-size: var(--font-size-sm);
+        }
+        
+        .btn-login:hover {
+            background: #27ae60;
+        }
+        
+        .btn-register {
+            background: var(--primary-color);
+            padding: 8px 12px;
+            font-size: var(--font-size-sm);
+        }
+        
+        .btn-logout {
+            background: var(--danger-color);
+            padding: 8px 12px;
+            font-size: var(--font-size-sm);
+        }
+        
+        .btn-logout:hover {
+            background: #c0392b;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+            overflow: hidden;
+            position: relative;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+        
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        
+        .user-details {
+            text-align: left;
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .user-name {
+            font-weight: bold;
+            color: var(--dark-text);
+            font-size: var(--font-size-md);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .user-title {
+            font-size: var(--font-size-sm);
+            color: var(--light-text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .user-uid {
+            font-size: 0.75rem;
+            color: #95a5a6;
+            margin-top: 2px;
+        }
+        
+        /* 可移动浮窗样式 */
+        .draggable-modal {
+            position: fixed;
+            background: var(--light-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            z-index: 2000;
+            display: none;
+            max-height: 80vh;
+            overflow-y: auto;
+            resize: both;
+            min-width: 400px;
+            min-height: 300px;
+        }
+        
+        .draggable-header {
+            padding: 12px 15px;
+            background: rgba(52, 152, 219, 0.1);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            cursor: move;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+        
+        .draggable-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--dark-text);
+        }
+        
+        .draggable-content {
+            padding: 20px;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--light-text);
+            transition: var(--transition);
+        }
+        
+        .close-btn:hover {
+            color: var(--danger-color);
+        }
+        
+        .qq-helper {
+            font-size: var(--font-size-sm);
+            color: var(--light-text);
+            margin-top: 15px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        .qq-options {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .qq-option {
+            flex: 1;
+            min-width: 160px;
+            text-align: center;
+        }
+        
+        .login-prompt {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            margin-top: 12px;
+            font-style: italic;
+            color: var(--light-text);
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .notification {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            padding: 12px 16px;
+            background: var(--secondary-color);
+            color: white;
+            border-radius: 6px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+            font-size: var(--font-size-sm);
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .user-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .btn-profile {
+            background: var(--accent-color);
+            padding: 8px 12px;
+            font-size: var(--font-size-sm);
+        }
+        
+        .btn-profile:hover {
+            background: #8e44ad;
+        }
+        
+        .btn-messages {
+            background: var(--warning-color);
+            padding: 8px 12px;
+            font-size: var(--font-size-sm);
+        }
+        
+        .btn-messages:hover {
+            background: #e67e22;
+        }
+        
+        .btn-backup {
+            background: #16a085;
+            padding: 8px 12px;
+            font-size: var(--font-size-sm);
+        }
+        
+        .btn-backup:hover {
+            background: #1abc9c;
+        }
+        
+        .btn-admin {
+            background: #e74c3c;
+            padding: 8px 12px;
+            font-size: var(--font-size-sm);
+        }
+        
+        .btn-admin:hover {
+            background: #c0392b;
+        }
+        
+        .message-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--danger-color);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .messages-container {
+            max-height: 250px;
+            overflow-y: auto;
+            margin-top: 12px;
+        }
+        
+        .message-item {
+            padding: 8px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: var(--font-size-sm);
+            color: var(--light-text);
+        }
+        
+        .message-content {
+            margin-top: 4px;
+            color: var(--dark-text);
+            font-size: var(--font-size-sm);
+        }
+        
+        .unread {
+            background: rgba(52, 152, 219, 0.08);
+        }
+        
+        /* 新增登录相关样式 */
+        .login-options {
+            margin-top: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: var(--font-size-sm);
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .remember-me input {
+            margin: 0;
+        }
+        
+        .forgot-password {
+            color: var(--primary-color);
+            text-decoration: none;
+            cursor: pointer;
+            font-size: var(--font-size-sm);
+        }
+        
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+        
+        .login-feedback {
+            text-align: center;
+            padding: 8px;
+            border-radius: 6px;
+            margin-top: 12px;
+            display: none;
+            font-size: var(--font-size-sm);
+        }
+        
+        .login-success {
+            background: rgba(46, 204, 113, 0.15);
+            color: #27ae60;
+            border: 1px solid rgba(46, 204, 113, 0.2);
+        }
+        
+        .login-error {
+            background: rgba(231, 76, 60, 0.15);
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.2);
+        }
+        
+        .guest-login {
+            text-align: center;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .guest-login-btn {
+            background: var(--warning-color);
+            padding: 6px 12px;
+            font-size: var(--font-size-sm);
+        }
+        
+        .guest-login-btn:hover {
+            background: #e67e22;
+        }
+        
+        /* 个人资料浮窗样式 */
+        .profile-modal {
+            width: 500px;
+            height: 500px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .profile-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 1.8rem;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        
+        .profile-avatar:hover::after {
+            content: '更换头像';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: white;
+        }
+        
+        .profile-info {
+            flex: 1;
+        }
+        
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--dark-text);
+            margin-bottom: 4px;
+        }
+        
+        .profile-title {
+            font-size: var(--font-size-md);
+            color: var(--light-text);
+            margin-bottom: 4px;
+        }
+        
+        .profile-uid {
+            font-size: var(--font-size-sm);
+            color: #95a5a6;
+        }
+        
+        .profile-tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+        }
+        
+        .profile-tab {
+            padding: 8px 15px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            font-size: var(--font-size-sm);
+        }
+        
+        .profile-tab.active {
+            border-bottom: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        .profile-tab-content {
+            display: none;
+        }
+        
+        .profile-tab-content.active {
+            display: block;
+        }
+        
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .stat-item {
+            background: rgba(255,255,255,0.7);
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .stat-label {
+            font-size: var(--font-size-sm);
+            color: var(--light-text);
+        }
+        
+        /* 消息中心样式 */
+        .messages-modal {
+            width: 600px;
+            height: 500px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .messages-tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+        }
+        
+        .messages-tab {
+            padding: 8px 15px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            font-size: var(--font-size-sm);
+        }
+        
+        .messages-tab.active {
+            border-bottom: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        .messages-list {
+            max-height: 350px;
+            overflow-y: auto;
+        }
+        
+        .message-item {
+            padding: 12px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .message-item:hover {
+            background: rgba(255,255,255,0.7);
+        }
+        
+        .message-item.unread {
+            background: rgba(52, 152, 219, 0.08);
+        }
+        
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+        
+        .message-sender {
+            font-weight: bold;
+            color: var(--dark-text);
+            font-size: var(--font-size-sm);
+        }
+        
+        .message-time {
+            font-size: 0.75rem;
+            color: var(--light-text);
+        }
+        
+        .message-preview {
+            color: var(--light-text);
+            font-size: var(--font-size-sm);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .message-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .btn-message {
+            padding: 4px 8px;
+            font-size: 0.75rem;
+        }
+        
+        /* 头像上传样式 */
+        .avatar-upload {
+            display: none;
+        }
+        
+        .avatar-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin: 0 auto 15px;
+            font-size: 2rem;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .avatar-actions {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .achievement-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+        
+        .achievement-item.locked {
+            opacity: 0.5;
+        }
+        
+        .achievement-icon {
+            font-size: 1.8rem;
+            margin-right: 12px;
+        }
+        
+        .achievement-info {
+            flex: 1;
+        }
+        
+        .achievement-name {
+            font-weight: bold;
+            color: var(--dark-text);
+            font-size: var(--font-size-md);
+        }
+        
+        .achievement-description {
+            font-size: var(--font-size-sm);
+            color: var(--light-text);
+        }
+        
+        .achievement-status {
+            font-size: 0.75rem;
+            color: var(--light-text);
+        }
+        
+        .no-messages {
+            text-align: center;
+            padding: 15px;
+            color: var(--light-text);
+            font-style: italic;
+        }
+        
+        /* 个人主页样式 */
+        .personal-homepage {
+            background: var(--light-bg);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .homepage-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .homepage-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 20px;
+            font-size: 2.2rem;
+            overflow: hidden;
+        }
+        
+        .homepage-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        
+        .homepage-user-info {
+            flex: 1;
+        }
+        
+        .homepage-name {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--dark-text);
+            margin-bottom: 4px;
+        }
+        
+        .homepage-title {
+            font-size: 1.1rem;
+            color: var(--light-text);
+            margin-bottom: 8px;
+        }
+        
+        .homepage-bio {
+            font-size: var(--font-size-md);
+            color: var(--dark-text);
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+        
+        .homepage-stats {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .homepage-stat {
+            text-align: center;
+        }
+        
+        .homepage-stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .homepage-stat-label {
+            font-size: var(--font-size-sm);
+            color: var(--light-text);
+        }
+        
+        .homepage-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .homepage-content {
+            margin-top: 25px;
+        }
+        
+        .homepage-section {
+            margin-bottom: 25px;
+        }
+        
+        .homepage-section-title {
+            font-size: 1.3rem;
+            color: var(--dark-text);
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--primary-color);
+        }
+        
+        /* 头衔选择样式 */
+        .title-selection {
+            margin-top: 15px;
+        }
+        
+        .title-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .title-option {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            transition: var(--transition);
+            font-size: var(--font-size-sm);
+        }
+        
+        .title-option:hover {
+            border-color: var(--primary-color);
+            background: rgba(52, 152, 219, 0.08);
+        }
+        
+        .title-option.selected {
+            border-color: var(--primary-color);
+            background: rgba(52, 152, 219, 0.15);
+        }
+        
+        .title-name {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        
+        .title-description {
+            font-size: 0.75rem;
+            color: var(--light-text);
+        }
+        
+        /* 管理员面板样式 */
+        .admin-panel {
+            width: 500px;
+            height: 500px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .admin-tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+        }
+        
+        .admin-tab {
+            padding: 8px 15px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            font-size: var(--font-size-sm);
+        }
+        
+        .admin-tab.active {
+            border-bottom: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        .admin-tab-content {
+            display: none;
+        }
+        
+        .admin-tab-content.active {
+            display: block;
+        }
+        
+        /* 用户管理样式 */
+        .user-management {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .user-management-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .user-management-info {
+            flex: 1;
+        }
+        
+        .user-management-actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .btn-small {
+            padding: 4px 8px;
+            font-size: 0.75rem;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .member-sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                margin-bottom: 15px;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .garden-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .draggable-modal {
+                width: 95% !important;
+                height: auto !important;
+                min-width: unset;
+                min-height: unset;
+            }
+            
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .profile-avatar {
+                margin-right: 0;
+                margin-bottom: 12px;
+            }
+            
+            .homepage-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .homepage-avatar {
+                margin-right: 0;
+                margin-bottom: 12px;
+            }
+            
+            .homepage-stats {
+                justify-content: center;
+            }
+            
+            .homepage-actions {
+                justify-content: center;
+            }
+        }
+        
+        /* 侧边栏切换按钮 */
+        .sidebar-toggle {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            width: 35px;
+            height: 35px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 300;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar-toggle {
+                display: flex;
+            }
+            
+            .member-sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .member-sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+        }
+        
+        /* 背景切换按钮 */
+        .bg-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 300;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景装饰元素 -->
+    <div class="bg-decoration bg-circle"></div>
+    <div class="bg-decoration bg-square"></div>
+    <div class="bg-decoration bg-triangle"></div>
+    
+    <!-- 背景切换按钮 -->
+    <div class="bg-toggle" id="bgToggle">
+        <i class="fas fa-palette"></i>
+    </div>
+    
+    <!-- 侧边栏切换按钮 -->
+    <div class="sidebar-toggle" id="sidebarToggle">
+        <i class="fas fa-bars"></i>
+    </div>
+    
+    <div class="app-container">
+        <div class="member-sidebar" id="memberSidebar">
+            <!-- 登录/用户信息区域 -->
+            <div id="sidebarAuthSection">
+                <div class="sidebar-auth-form" id="sidebarLoginForm">
+                    <h3 style="text-align: center; margin-bottom: 12px; font-size: 1.2rem;">登录/注册</h3>
+                    <div class="form-group">
+                        <label for="username" class="required-field">用户名</label>
+                        <input type="text" id="username" class="form-control" placeholder="请输入用户名" required>
+                        <div class="error-message" id="usernameError">用户名不能为空</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="required-field">密码</label>
+                        <input type="password" id="password" class="form-control" placeholder="请输入密码" required>
+                        <div class="error-message" id="passwordError">密码不能为空</div>
+                    </div>
+                    
+                    <!-- 登录选项 -->
+                    <div class="login-options">
+                        <div class="remember-me">
+                            <input type="checkbox" id="rememberMe">
+                            <label for="rememberMe">记住我</label>
+                        </div>
+                        <a class="forgot-password" id="forgotPassword">忘记密码?</a>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button id="loginBtn" class="btn btn-login">登录</button>
+                        <button id="registerBtn" class="btn btn-register">注册</button>
+                    </div>
+                    
+                    <!-- 登录反馈信息 -->
+                    <div class="login-feedback login-success" id="loginSuccess"></div>
+                    <div class="login-feedback login-error" id="loginError"></div>
+                    
+                    <!-- 游客登录 -->
+                    <div class="guest-login">
+                        <button id="guestLoginBtn" class="btn guest-login-btn">游客体验</button>
+                    </div>
+                </div>
+                
+                <!-- 用户信息区域 -->
+                <div class="sidebar-auth-form" id="sidebarUserInfo" style="display: none;">
+                    <div class="user-info">
+                        <div class="user-avatar" id="userAvatar">
+                            <!-- 头像将使用用户名首字母 -->
+                        </div>
+                        <div class="user-details">
+                            <div class="user-name" id="displayName">用户名</div>
+                            <div class="user-title" id="userTitle">普通成员</div>
+                            <div class="user-uid" id="userUid">UID: 1314</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 用户操作按钮 -->
+                    <div class="user-actions">
+                        <button id="editProfileBtn" class="btn btn-profile">编辑资料</button>
+                        <button id="messagesBtn" class="btn btn-messages">
+                            消息中心
+                            <span id="messageBadge" class="message-badge" style="display: none;"></span>
+                        </button>
+                        <button id="viewHomepageBtn" class="btn btn-primary">我的主页</button>
+                        <button id="adminPanelBtn" class="btn btn-admin" style="display: none;">管理面板</button>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button id="logoutBtn" class="btn btn-logout">退出登录</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 成员列表区域 -->
+            <h2 class="member-list-title">社区成员</h2>
+            <div class="online-count" id="onlineCount"></div>
+            <div id="memberList"></div>
+            <div id="loginPrompt" class="login-prompt" style="display: none;">
+                请先登录以查看社区成员
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="container">
+                <header>
+                    <h1>欢迎来到Rin的秘密花园</h1>
+                    <p class="subtitle">Welcome to Rin's Secret Garden</p>
+                    <p>这里是我的个人空间，分享我的生活见识和生活感悟</p>
+                </header>
+                
+                <!-- 个人主页区域 -->
+                <div class="personal-homepage" id="personalHomepage" style="display: none;">
+                    <!-- 个人主页内容将在这里显示 -->
+                </div>
+                
+                <!-- 动态内容区域 -->
+                <div id="dynamicContent">
+                    <!-- 动态内容将在这里显示 -->
+                </div>
+                
+                <div class="garden-container">
+                    <div class="garden-section">
+                        <h2 class="section-title">
+                            <span>🌍</span> 生活见识论坛
+                        </h2>
+                        <p>分享我在生活中遇到的有趣事物、文化体验和旅行见闻。记录那些让我眼界大开的瞬间和感悟。</p>
+                        <a href="生活见识.html" class="btn">进入论坛</a>
+                    </div>
+                    
+                    <div class="garden-section">
+                        <h2 class="section-title">
+                            <span>🎨</span> 创意空间论坛
+                        </h2>
+                        <p>分享我的设计作品、摄影和艺术创作，这里是我表达创意和灵感的地方。</p>
+                        <a href="创意空间.html" class="btn">进入论坛</a>
+                    </div>
+                    
+                    <div class="garden-section">
+                        <h2 class="section-title">
+                            <span>💬</span> 交流论坛
+                        </h2>
+                        <p>这是一个开放的交流空间，欢迎大家分享想法、讨论话题，互相学习和成长。</p>
+                        <a href="交流论坛.html" class="btn">进入论坛</a>
+                    </div>
+                </div>
+                
+                <div class="garden-section">
+                    <h2 class="section-title">
+                        <span>📞</span> 联系我
+                    </h2>
+                    <p>如果你对我的内容感兴趣，或者想与我交流生活心得，欢迎通过以下方式联系我：</p>
+                    <p>个人QQ：3652637433</p>
+                    
+                    <div class="qq-options">
+                        <div class="qq-option">
+                            <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=3652637433" class="btn">添加好友 (方式一)</a>
+                        </div>
+                        <div class="qq-option">
+                            <a href="http://wpa.qq.com/msgrd?v=3&uin=3652637433&site=qq&menu=yes" target="_blank" class="btn">添加好友 (方式二)</a>
+                        </div>
+                    </div>
+                    
+                    <div class="qq-helper">
+                        <p><strong>温馨提示：</strong>如果以上链接无法直接添加，请尝试以下方法：</p>
+                        <ol>
+                            <li>复制QQ号 <strong>3652637433</strong> 手动添加</li>
+                            <li>确保您已安装最新版QQ客户端</li>
+                            <li>如果使用手机访问，请尝试在QQ内打开此页面</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            
+            <footer>
+                <p>© 2025 Rin的秘密花园 | 用心创造每一片绿叶</p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- 个人资料浮窗 -->
+    <div class="draggable-modal profile-modal" id="profileModal">
+        <div class="draggable-header" id="profileModalHeader">
+            <div class="draggable-title">个人资料</div>
+            <button class="close-btn" id="closeProfileBtn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="draggable-content">
+            <div class="profile-header">
+                <div class="profile-avatar" id="profileAvatar">
+                    <!-- 头像将在这里显示 -->
+                </div>
+                <div class="profile-info">
+                    <div class="profile-name" id="profileName">用户名</div>
+                    <div class="profile-title" id="profileTitle">普通成员</div>
+                    <div class="profile-uid" id="profileUid">UID: 1314</div>
+                </div>
+            </div>
+            
+            <div class="profile-tabs">
+                <div class="profile-tab active" data-tab="basic">基本信息</div>
+                <div class="profile-tab" data-tab="stats">统计信息</div>
+                <div class="profile-tab" data-tab="achievements">成就</div>
+                <div class="profile-tab" data-tab="titles">头衔</div>
+            </div>
+            
+            <div class="profile-tab-content active" id="basicTab">
+                <form id="profileForm">
+                    <div class="form-group">
+                        <label for="profileDisplayName">昵称</label>
+                        <input type="text" id="profileDisplayName" class="form-control" placeholder="请输入昵称">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="profileBio">个人简介</label>
+                        <textarea id="profileBio" class="form-control" rows="3" placeholder="介绍一下自己..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>头像</label>
+                        <div class="avatar-preview" id="avatarPreview">
+                            <!-- 头像预览 -->
+                        </div>
+                        <div class="avatar-actions">
+                            <input type="file" id="avatarUpload" class="avatar-upload" accept="image/*">
+                            <button type="button" id="uploadAvatarBtn" class="btn btn-primary">上传头像</button>
+                            <button type="button" id="removeAvatarBtn" class="btn btn-danger">移除头像</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" id="saveProfileBtn" class="btn btn-primary">保存更改</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="profile-tab-content" id="statsTab">
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="statPosts">0</div>
+                        <div class="stat-label">帖子</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="statFollowers">0</div>
+                        <div class="stat-label">关注者</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="statFollowing">0</div>
+                        <div class="stat-label">关注中</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="statLikes">0</div>
+                        <div class="stat-label">获赞</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="profile-tab-content" id="achievementsTab">
+                <div id="achievementsList">
+                    <!-- 成就将在这里显示 -->
+                </div>
+            </div>
+            
+            <div class="profile-tab-content" id="titlesTab">
+                <div class="title-selection">
+                    <h3>选择头衔</h3>
+                    <p>选择一个头衔来展示您的身份和成就</p>
+                    <div class="title-options" id="titleOptions">
+                        <!-- 头衔选项将在这里动态生成 -->
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" id="saveTitleBtn" class="btn btn-primary">保存头衔</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 管理员面板浮窗 -->
+    <div class="draggable-modal admin-panel" id="adminPanel">
+        <div class="draggable-header" id="adminPanelHeader">
+            <div class="draggable-title">管理员面板</div>
+            <button class="close-btn" id="closeAdminPanelBtn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="draggable-content">
+            <div class="admin-tabs">
+                <div class="admin-tab active" data-tab="promote">用户权限</div>
+                <div class="admin-tab" data-tab="data">数据管理</div>
+                <div class="admin-tab" data-tab="users">用户管理</div>
+            </div>
+            
+            <div class="admin-tab-content active" id="promoteTab">
+                <div class="form-group">
+                    <label for="promoteUsername">提升用户为管理员</label>
+                    <input type="text" id="promoteUsername" class="form-control" placeholder="输入要提升的用户名">
+                </div>
+                <div class="form-actions">
+                    <button id="promoteBtn" class="btn">提升为管理员</button>
+                </div>
+            </div>
+            
+            <div class="admin-tab-content" id="dataTab">
+                <div class="form-group">
+                    <label>数据管理</label>
+                    <div class="form-actions">
+                        <button id="backupBtn" class="btn btn-backup">备份数据</button>
+                        <button id="restoreBtn" class="btn">恢复数据</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="admin-tab-content" id="usersTab">
+                <div class="user-management" id="userManagement">
+                    <!-- 用户管理内容将在这里显示 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 消息中心浮窗 -->
+    <div class="draggable-modal messages-modal" id="messagesModal">
+        <div class="draggable-header" id="messagesModalHeader">
+            <div class="draggable-title">消息中心</div>
+            <button class="close-btn" id="closeMessagesBtn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="draggable-content">
+            <div class="messages-tabs">
+                <div class="messages-tab active" data-tab="all">全部消息</div>
+                <div class="messages-tab" data-tab="unread">未读消息</div>
+                <div class="messages-tab" data-tab="system">系统消息</div>
+            </div>
+            
+            <div class="messages-list" id="messagesList">
+                <!-- 消息将在这里显示 -->
+            </div>
+            
+            <div class="form-actions">
+                <button id="markAllReadBtn" class="btn btn-primary">标记全部已读</button>
+                <button id="deleteAllMessagesBtn" class="btn btn-danger">删除所有消息</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 用户数据存储
+        let users = JSON.parse(localStorage.getItem('gardenUsers')) || [];
+        let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+        let messages = JSON.parse(localStorage.getItem('gardenMessages')) || [];
+        let userStats = JSON.parse(localStorage.getItem('gardenStats')) || {};
+        let userAchievements = JSON.parse(localStorage.getItem('gardenAchievements')) || {};
+        
+        // 定义可用的头衔
+        const availableTitles = [
+            { id: 1, name: '花园访客', description: '新加入的成员', availableTo: 'all' },
+            { id: 2, name: '花园常客', description: '经常访问的成员', availableTo: 'all' },
+            { id: 3, name: '花园达人', description: '活跃的社区成员', availableTo: 'all' },
+            { id: 4, name: '花园元老', description: '资深的社区成员', availableTo: 'all' },
+            { id: 5, name: '花园管理员', description: '社区管理员', availableTo: 'admin' },
+            { id: 6, name: 'rin-管理员', description: '超级管理员', availableTo: 'superadmin' }
+        ];
+        
+        // 背景样式数组
+        const backgroundStyles = [
+            'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
+            'linear-gradient(135deg, #d299c2 0%, #fef9d7 100%)',
+            'linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)',
+            'linear-gradient(135deg, #fdbb2d 0%, #22c1c3 100%)',
+            'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
+            'linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)'
+        ];
+        
+        let currentBgIndex = 0;
+        
+        // 初始化数据
+        function initializeData() {
+            // 创建新的管理员账户 - 用户名：Rin，密码：QCL060527
+            if (!users.find(u => u.username === 'Rin')) {
+                const rinUser = {
+                    id: 1,
+                    username: 'Rin',
+                    password: 'QCL060527',
+                    displayName: 'Rin',
+                    title: 'rin-管理员',
+                    avatar: null,
+                    isAdmin: true,
+                    isSuperAdmin: true,
+                    isOnline: true,
+                    lastSeen: new Date().toISOString(),
+                    uid: 1314,
+                    bio: '花园的创建者，热爱生活与分享',
+                    joinDate: new Date().toISOString(),
+                    lastActive: new Date().toISOString(),
+                    availableTitles: [1, 2, 3, 4, 5, 6]
+                };
+                users.push(rinUser);
+                localStorage.setItem('gardenUsers', JSON.stringify(users));
+                
+                // 初始化用户统计
+                userStats['Rin'] = {
+                    posts: 12,
+                    followers: 25,
+                    following: 8,
+                    likes: 156
+                };
+                localStorage.setItem('gardenStats', JSON.stringify(userStats));
+                
+                // 初始化用户成就
+                userAchievements['Rin'] = [
+                    { id: 1, name: '创始者', description: '花园的创建者', icon: '👑', unlocked: true },
+                    { id: 2, name: '活跃用户', description: '发布10个以上帖子', icon: '💬', unlocked: true },
+                    { id: 3, name: '社交达人', description: '拥有20个以上关注者', icon: '🤝', unlocked: true },
+                    { id: 4, name: '人气之星', description: '获得100个以上点赞', icon: '⭐', unlocked: true }
+                ];
+                localStorage.setItem('gardenAchievements', JSON.stringify(userAchievements));
+                
+                // 创建欢迎消息
+                const welcomeMessage = {
+                    id: Date.now(),
+                    from: '系统',
+                    to: 'Rin',
+                    content: '欢迎来到Rin的秘密花园！感谢您创建这个美好的社区。',
+                    timestamp: new Date().toISOString(),
+                    read: false,
+                    type: 'system'
+                };
+                messages.push(welcomeMessage);
+                localStorage.setItem('gardenMessages', JSON.stringify(messages));
+            }
+            
+            // 为现有用户添加缺失的属性
+            users.forEach(user => {
+                if (!user.uid) {
+                    user.uid = generateUniqueUID();
+                }
+                if (!user.bio) {
+                    user.bio = '这个用户很神秘，什么都没有留下...';
+                }
+                if (!user.joinDate) {
+                    user.joinDate = new Date().toISOString();
+                }
+                if (!user.lastActive) {
+                    user.lastActive = new Date().toISOString();
+                }
+                
+                // 初始化用户可用头衔
+                if (!user.availableTitles) {
+                    user.availableTitles = [1];
+                    
+                    // 根据用户类型添加更多头衔
+                    if (user.isAdmin || user.isSuperAdmin) {
+                        user.availableTitles.push(5);
+                    }
+                    if (user.isSuperAdmin) {
+                        user.availableTitles.push(6);
+                    }
+                    
+                    // 根据用户统计添加头衔
+                    const stats = userStats[user.username] || { posts: 0, followers: 0, likes: 0 };
+                    if (stats.posts >= 5) {
+                        user.availableTitles.push(2);
+                    }
+                    if (stats.posts >= 20) {
+                        user.availableTitles.push(3);
+                    }
+                    if (stats.posts >= 50 || stats.followers >= 10) {
+                        user.availableTitles.push(4);
+                    }
+                }
+                
+                // 初始化用户统计
+                if (!userStats[user.username]) {
+                    userStats[user.username] = {
+                        posts: 0,
+                        followers: 0,
+                        following: 0,
+                        likes: 0
+                    };
+                }
+                
+                // 初始化用户成就
+                if (!userAchievements[user.username]) {
+                    userAchievements[user.username] = [
+                        { id: 1, name: '创始者', description: '花园的创建者', icon: '👑', unlocked: user.username === 'Rin' },
+                        { id: 2, name: '活跃用户', description: '发布10个以上帖子', icon: '💬', unlocked: userStats[user.username].posts >= 10 },
+                        { id: 3, name: '社交达人', description: '拥有20个以上关注者', icon: '🤝', unlocked: userStats[user.username].followers >= 20 },
+                        { id: 4, name: '人气之星', description: '获得100个以上点赞', icon: '⭐', unlocked: userStats[user.username].likes >= 100 }
+                    ];
+                }
+            });
+            localStorage.setItem('gardenUsers', JSON.stringify(users));
+            localStorage.setItem('gardenStats', JSON.stringify(userStats));
+            localStorage.setItem('gardenAchievements', JSON.stringify(userAchievements));
+        }
+        
+        // 初始化数据
+        initializeData();
+        
+        // DOM元素
+        const sidebarLoginForm = document.getElementById('sidebarLoginForm');
+        const sidebarUserInfo = document.getElementById('sidebarUserInfo');
+        const loginBtn = document.getElementById('loginBtn');
+        const registerBtn = document.getElementById('registerBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const memberList = document.getElementById('memberList');
+        const adminPanel = document.getElementById('adminPanel');
+        const onlineCount = document.getElementById('onlineCount');
+        const loginPrompt = document.getElementById('loginPrompt');
+        const userAvatar = document.getElementById('userAvatar');
+        const personalHomepage = document.getElementById('personalHomepage');
+        const viewHomepageBtn = document.getElementById('viewHomepageBtn');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const memberSidebar = document.getElementById('memberSidebar');
+        const adminPanelBtn = document.getElementById('adminPanelBtn');
+        const closeAdminPanelBtn = document.getElementById('closeAdminPanelBtn');
+        const bgToggle = document.getElementById('bgToggle');
+        
+        // 新增登录相关DOM元素
+        const rememberMe = document.getElementById('rememberMe');
+        const forgotPassword = document.getElementById('forgotPassword');
+        const loginSuccess = document.getElementById('loginSuccess');
+        const loginError = document.getElementById('loginError');
+        const guestLoginBtn = document.getElementById('guestLoginBtn');
+        
+        // 错误信息元素
+        const usernameError = document.getElementById('usernameError');
+        const passwordError = document.getElementById('passwordError');
+        
+        // 个人资料相关DOM元素
+        const editProfileBtn = document.getElementById('editProfileBtn');
+        const profileModal = document.getElementById('profileModal');
+        const closeProfileBtn = document.getElementById('closeProfileBtn');
+        const profileForm = document.getElementById('profileForm');
+        const profileDisplayName = document.getElementById('profileDisplayName');
+        const profileBio = document.getElementById('profileBio');
+        const saveProfileBtn = document.getElementById('saveProfileBtn');
+        const profileAvatar = document.getElementById('profileAvatar');
+        const avatarPreview = document.getElementById('avatarPreview');
+        const uploadAvatarBtn = document.getElementById('uploadAvatarBtn');
+        const removeAvatarBtn = document.getElementById('removeAvatarBtn');
+        const avatarUpload = document.getElementById('avatarUpload');
+        const profileName = document.getElementById('profileName');
+        const profileTitle = document.getElementById('profileTitle');
+        const profileUid = document.getElementById('profileUid');
+        
+        // 头衔选择相关DOM元素
+        const titleOptions = document.getElementById('titleOptions');
+        const saveTitleBtn = document.getElementById('saveTitleBtn');
+        
+        // 消息中心相关DOM元素
+        const messagesBtn = document.getElementById('messagesBtn');
+        const messagesModal = document.getElementById('messagesModal');
+        const closeMessagesBtn = document.getElementById('closeMessagesBtn');
+        const messagesList = document.getElementById('messagesList');
+        const markAllReadBtn = document.getElementById('markAllReadBtn');
+        const deleteAllMessagesBtn = document.getElementById('deleteAllMessagesBtn');
+        const messageBadge = document.getElementById('messageBadge');
+        
+        // 管理员面板相关DOM元素
+        const promoteUsername = document.getElementById('promoteUsername');
+        const promoteBtn = document.getElementById('promoteBtn');
+        const backupBtn = document.getElementById('backupBtn');
+        const restoreBtn = document.getElementById('restoreBtn');
+        const userManagement = document.getElementById('userManagement');
+        
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查是否有记住的登录状态
+            const rememberedUser = localStorage.getItem('rememberedUser');
+            if (rememberedUser) {
+                const user = users.find(u => u.username === rememberedUser);
+                if (user) {
+                    currentUser = user;
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    updateUserStatus(currentUser.username, true);
+                    showUserInfo();
+                    displayMemberList();
+                    updateMessageBadge();
+                    
+                    // 自动勾选记住我
+                    rememberMe.checked = true;
+                    
+                    showNotification('自动登录成功！');
+                }
+            }
+            
+            if (currentUser) {
+                showUserInfo();
+                updateUserStatus(currentUser.username, true);
+                updateMessageBadge();
+                displayPersonalHomepage();
+            } else {
+                showLoginForm();
+            }
+            
+            displayMemberList();
+            
+            // 添加事件监听器
+            setupEventListeners();
+            
+            // 初始化可拖动功能
+            initDraggableModals();
+            
+            // 初始化用户管理
+            initUserManagement();
+        });
+        
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 登录相关事件
+            loginBtn.addEventListener('click', handleLogin);
+            registerBtn.addEventListener('click', handleRegister);
+            logoutBtn.addEventListener('click', handleLogout);
+            
+            // 个人资料相关事件
+            editProfileBtn.addEventListener('click', showProfileModal);
+            closeProfileBtn.addEventListener('click', hideProfileModal);
+            saveProfileBtn.addEventListener('click', saveProfile);
+            uploadAvatarBtn.addEventListener('click', () => avatarUpload.click());
+            removeAvatarBtn.addEventListener('click', removeAvatar);
+            avatarUpload.addEventListener('change', handleAvatarUpload);
+            
+            // 头衔选择事件
+            saveTitleBtn.addEventListener('click', saveSelectedTitle);
+            
+            // 消息中心相关事件
+            messagesBtn.addEventListener('click', showMessagesModal);
+            closeMessagesBtn.addEventListener('click', hideMessagesModal);
+            markAllReadBtn.addEventListener('click', markAllMessagesAsRead);
+            deleteAllMessagesBtn.addEventListener('click', deleteAllMessages);
+            
+            // 个人主页事件
+            viewHomepageBtn.addEventListener('click', displayPersonalHomepage);
+            
+            // 侧边栏切换事件
+            sidebarToggle.addEventListener('click', toggleSidebar);
+            
+            // 管理员面板事件
+            adminPanelBtn.addEventListener('click', showAdminPanel);
+            closeAdminPanelBtn.addEventListener('click', hideAdminPanel);
+            promoteBtn.addEventListener('click', promoteUser);
+            backupBtn.addEventListener('click', backupData);
+            restoreBtn.addEventListener('click', restoreData);
+            
+            // 背景切换事件
+            bgToggle.addEventListener('click', changeBackground);
+            
+            // 标签页切换事件
+            setupTabEvents();
+        }
+        
+        // 设置标签页切换事件
+        function setupTabEvents() {
+            // 个人资料标签页
+            const profileTabs = document.querySelectorAll('.profile-tab');
+            profileTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // 移除所有标签页的active类
+                    profileTabs.forEach(t => t.classList.remove('active'));
+                    // 添加当前标签页的active类
+                    this.classList.add('active');
+                    
+                    // 隐藏所有内容
+                    document.querySelectorAll('.profile-tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    // 显示对应内容
+                    document.getElementById(tabId + 'Tab').classList.add('active');
+                    
+                    // 如果切换到统计标签，更新统计数据
+                    if (tabId === 'stats') {
+                        updateProfileStats();
+                    }
+                    // 如果切换到成就标签，更新成就列表
+                    if (tabId === 'achievements') {
+                        updateAchievementsList();
+                    }
+                    // 如果切换到头衔标签，更新头衔选择
+                    if (tabId === 'titles') {
+                        updateTitleSelection();
+                    }
+                });
+            });
+            
+            // 消息中心标签页
+            const messagesTabs = document.querySelectorAll('.messages-tab');
+            messagesTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // 移除所有标签页的active类
+                    messagesTabs.forEach(t => t.classList.remove('active'));
+                    // 添加当前标签页的active类
+                    this.classList.add('active');
+                    
+                    // 刷新消息列表
+                    displayMessages(tabId);
+                });
+            });
+            
+            // 管理员面板标签页
+            const adminTabs = document.querySelectorAll('.admin-tab');
+            adminTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // 移除所有标签页的active类
+                    adminTabs.forEach(t => t.classList.remove('active'));
+                    // 添加当前标签页的active类
+                    this.classList.add('active');
+                    
+                    // 隐藏所有内容
+                    document.querySelectorAll('.admin-tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    // 显示对应内容
+                    document.getElementById(tabId + 'Tab').classList.add('active');
+                    
+                    // 如果切换到用户管理标签，更新用户列表
+                    if (tabId === 'users') {
+                        updateUserManagement();
+                    }
+                });
+            });
+        }
+        
+        // 初始化可拖动模态框
+        function initDraggableModals() {
+            const modals = [
+                { modal: profileModal, header: document.getElementById('profileModalHeader') },
+                { modal: adminPanel, header: document.getElementById('adminPanelHeader') },
+                { modal: messagesModal, header: document.getElementById('messagesModalHeader') }
+            ];
+            
+            modals.forEach(({ modal, header }) => {
+                let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+                
+                header.onmousedown = dragMouseDown;
+                
+                function dragMouseDown(e) {
+                    e = e || window.event;
+                    e.preventDefault();
+                    // 获取鼠标初始位置
+                    pos3 = e.clientX;
+                    pos4 = e.clientY;
+                    document.onmouseup = closeDragElement;
+                    document.onmousemove = elementDrag;
+                }
+                
+                function elementDrag(e) {
+                    e = e || window.event;
+                    e.preventDefault();
+                    // 计算新位置
+                    pos1 = pos3 - e.clientX;
+                    pos2 = pos4 - e.clientY;
+                    pos3 = e.clientX;
+                    pos4 = e.clientY;
+                    // 设置元素新位置
+                    modal.style.top = (modal.offsetTop - pos2) + "px";
+                    modal.style.left = (modal.offsetLeft - pos1) + "px";
+                }
+                
+                function closeDragElement() {
+                    // 停止移动
+                    document.onmouseup = null;
+                    document.onmousemove = null;
+                }
+            });
+        }
+        
+        // 初始化用户管理
+        function initUserManagement() {
+            updateUserManagement();
+        }
+        
+        // 更新用户管理列表
+        function updateUserManagement() {
+            if (!currentUser || !currentUser.isSuperAdmin) return;
+            
+            userManagement.innerHTML = '';
+            
+            if (users.length === 0) {
+                userManagement.innerHTML = '<p>暂无用户</p>';
+                return;
+            }
+            
+            users.forEach(user => {
+                const userItem = document.createElement('div');
+                userItem.className = 'user-management-item';
+                
+                userItem.innerHTML = `
+                    <div class="user-management-info">
+                        <div><strong>${user.displayName}</strong> (${user.username})</div>
+                        <div>UID: ${user.uid} | 头衔: ${user.title}</div>
+                        <div>注册时间: ${new Date(user.joinDate).toLocaleDateString()}</div>
+                    </div>
+                    <div class="user-management-actions">
+                        ${user.username !== currentUser.username ? `
+                            <button class="btn btn-danger btn-small delete-user-btn" data-username="${user.username}">删除</button>
+                            ${!user.isAdmin ? `<button class="btn btn-primary btn-small make-admin-btn" data-username="${user.username}">设为管理员</button>` : ''}
+                        ` : ''}
+                    </div>
+                `;
+                
+                userManagement.appendChild(userItem);
+                
+                // 添加事件监听器
+                const deleteBtn = userItem.querySelector('.delete-user-btn');
+                const makeAdminBtn = userItem.querySelector('.make-admin-btn');
+                
+                if (deleteBtn) {
+                    deleteBtn.addEventListener('click', function() {
+                        deleteUser(this.dataset.username);
+                    });
+                }
+                
+                if (makeAdminBtn) {
+                    makeAdminBtn.addEventListener('click', function() {
+                        makeUserAdmin(this.dataset.username);
+                    });
+                }
+            });
+        }
+        
+        // 删除用户
+        function deleteUser(username) {
+            if (!confirm(`确定要删除用户 ${username} 吗？此操作不可恢复。`)) {
+                return;
+            }
+            
+            if (username === currentUser.username) {
+                showNotification('不能删除当前登录的用户', 'error');
+                return;
+            }
+            
+            const userIndex = users.findIndex(u => u.username === username);
+            if (userIndex !== -1) {
+                users.splice(userIndex, 1);
+                localStorage.setItem('gardenUsers', JSON.stringify(users));
+                
+                // 更新用户管理列表
+                updateUserManagement();
+                // 更新成员列表
+                displayMemberList();
+                
+                showNotification(`用户 ${username} 已删除`);
+            }
+        }
+        
+        // 设置用户为管理员
+        function makeUserAdmin(username) {
+            const userIndex = users.findIndex(u => u.username === username);
+            if (userIndex !== -1) {
+                users[userIndex].isAdmin = true;
+                users[userIndex].title = '花园管理员';
+                
+                // 添加管理员头衔
+                if (!users[userIndex].availableTitles.includes(5)) {
+                    users[userIndex].availableTitles.push(5);
+                }
+                
+                localStorage.setItem('gardenUsers', JSON.stringify(users));
+                
+                // 发送系统消息
+                const systemMessage = {
+                    id: Date.now(),
+                    from: '系统',
+                    to: username,
+                    content: '恭喜！您已被提升为花园管理员。',
+                    timestamp: new Date().toISOString(),
+                    read: false,
+                    type: 'system'
+                };
+                messages.push(systemMessage);
+                localStorage.setItem('gardenMessages', JSON.stringify(messages));
+                
+                // 更新用户管理列表
+                updateUserManagement();
+                // 更新成员列表
+                displayMemberList();
+                
+                showNotification(`用户 ${username} 已提升为管理员`);
+            }
+        }
+        
+        // 以下是原有的功能函数，保持不变
+        // 显示个人资料浮窗
+        function showProfileModal() {
+            if (!currentUser) return;
+            
+            // 填充个人资料数据
+            profileName.textContent = currentUser.displayName;
+            profileTitle.textContent = currentUser.title;
+            profileUid.textContent = `UID: ${currentUser.uid}`;
+            profileDisplayName.value = currentUser.displayName;
+            profileBio.value = currentUser.bio || '';
+            
+            // 更新头像显示
+            updateAvatarDisplay(profileAvatar, currentUser);
+            updateAvatarDisplay(avatarPreview, currentUser);
+            
+            // 显示浮窗
+            profileModal.style.display = 'block';
+        }
+        
+        // 隐藏个人资料浮窗
+        function hideProfileModal() {
+            profileModal.style.display = 'none';
+        }
+        
+        // 保存个人资料
+        function saveProfile() {
+            if (!currentUser) return;
+            
+            const newDisplayName = profileDisplayName.value.trim();
+            const newBio = profileBio.value.trim();
+            
+            if (!newDisplayName) {
+                showNotification('昵称不能为空', 'error');
+                return;
+            }
+            
+            // 更新用户数据
+            const userIndex = users.findIndex(u => u.username === currentUser.username);
+            if (userIndex !== -1) {
+                users[userIndex].displayName = newDisplayName;
+                users[userIndex].bio = newBio;
+                
+                // 更新当前用户
+                currentUser.displayName = newDisplayName;
+                currentUser.bio = newBio;
+                
+                localStorage.setItem('gardenUsers', JSON.stringify(users));
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                
+                // 更新界面
+                showUserInfo();
+                displayMemberList();
+                displayPersonalHomepage();
+                
+                showNotification('个人资料已更新');
+                hideProfileModal();
+            }
+        }
+        
+        // 处理头像上传
+        function handleAvatarUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (!file.type.match('image.*')) {
+                showNotification('请选择图片文件', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imageData = e.target.result;
+                
+                // 更新用户头像
+                const userIndex = users.findIndex(u => u.username === currentUser.username);
+                if (userIndex !== -1) {
+                    users[userIndex].avatar = imageData;
+                    currentUser.avatar = imageData;
+                    
+                    localStorage.setItem('gardenUsers', JSON.stringify(users));
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    
+                    // 更新界面
+                    updateAvatarDisplay(profileAvatar, currentUser);
+                    updateAvatarDisplay(avatarPreview, currentUser);
+                    updateAvatarDisplay(userAvatar, currentUser);
+                    displayMemberList();
+                    displayPersonalHomepage();
+                    
+                    showNotification('头像已更新');
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // 移除头像
+        function removeAvatar() {
+            if (!currentUser) return;
+            
+            const userIndex = users.findIndex(u => u.username === currentUser.username);
+            if (userIndex !== -1) {
+                users[userIndex].avatar = null;
+                currentUser.avatar = null;
+                
+                localStorage.setItem('gardenUsers', JSON.stringify(users));
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                
+                // 更新界面
+                updateAvatarDisplay(profileAvatar, currentUser);
+                updateAvatarDisplay(avatarPreview, currentUser);
+                updateAvatarDisplay(userAvatar, currentUser);
+                displayMemberList();
+                displayPersonalHomepage();
+                
+                showNotification('头像已移除');
+            }
+        }
+        
+        // 更新个人资料统计
+        function updateProfileStats() {
+            if (!currentUser) return;
+            
+            const stats = userStats[currentUser.username] || {
+                posts: 0,
+                followers: 0,
+                following: 0,
+                likes: 0
+            };
+            
+            document.getElementById('statPosts').textContent = stats.posts;
+            document.getElementById('statFollowers').textContent = stats.followers;
+            document.getElementById('statFollowing').textContent = stats.following;
+            document.getElementById('statLikes').textContent = stats.likes;
+        }
+        
+        // 更新成就列表
+        function updateAchievementsList() {
+            if (!currentUser) return;
+            
+            const achievements = userAchievements[currentUser.username] || [];
+            const achievementsList = document.getElementById('achievementsList');
+            
+            achievementsList.innerHTML = '';
+            
+            if (achievements.length === 0) {
+                achievementsList.innerHTML = '<p>暂无成就</p>';
+                return;
+            }
+            
+            achievements.forEach(achievement => {
+                const achievementItem = document.createElement('div');
+                achievementItem.className = `achievement-item ${achievement.unlocked ? 'unlocked' : 'locked'}`;
+                achievementItem.innerHTML = `
+                    <div class="achievement-icon">${achievement.icon}</div>
+                    <div class="achievement-info">
+                        <div class="achievement-name">${achievement.name}</div>
+                        <div class="achievement-description">${achievement.description}</div>
+                    </div>
+                    <div class="achievement-status">${achievement.unlocked ? '已解锁' : '未解锁'}</div>
+                `;
+                achievementsList.appendChild(achievementItem);
+            });
+        }
+        
+        // 更新头衔选择
+        function updateTitleSelection() {
+            if (!currentUser) return;
+            
+            titleOptions.innerHTML = '';
+            
+            // 获取用户可用的头衔
+            const userAvailableTitles = currentUser.availableTitles || [1];
+            
+            availableTitles.forEach(title => {
+                // 检查用户是否有权限使用这个头衔
+                if (userAvailableTitles.includes(title.id)) {
+                    const titleOption = document.createElement('div');
+                    titleOption.className = `title-option ${currentUser.title === title.name ? 'selected' : ''}`;
+                    titleOption.dataset.id = title.id;
+                    
+                    titleOption.innerHTML = `
+                        <div class="title-name">${title.name}</div>
+                        <div class="title-description">${title.description}</div>
+                    `;
+                    
+                    titleOption.addEventListener('click', function() {
+                        // 移除所有选项的选中状态
+                        document.querySelectorAll('.title-option').forEach(option => {
+                            option.classList.remove('selected');
+                        });
+                        
+                        // 添加当前选项的选中状态
+                        this.classList.add('selected');
+                    });
+                    
+                    titleOptions.appendChild(titleOption);
+                }
+            });
+        }
+        
+        // 保存选择的头衔
+        function saveSelectedTitle() {
+            if (!currentUser) return;
+            
+            const selectedTitleOption = document.querySelector('.title-option.selected');
+            if (!selectedTitleOption) {
+                showNotification('请选择一个头衔', 'error');
+                return;
+            }
+            
+            const titleId = parseInt(selectedTitleOption.dataset.id);
+            const selectedTitle = availableTitles.find(t => t.id === titleId);
+            
+            if (!selectedTitle) {
+                showNotification('选择的头衔无效', 'error');
+                return;
+            }
+            
+            // 更新用户数据
+            const userIndex = users.findIndex(u => u.username === currentUser.username);
+            if (userIndex !== -1) {
+                users[userIndex].title = selectedTitle.name;
+                currentUser.title = selectedTitle.name;
+                
+                localStorage.setItem('gardenUsers', JSON.stringify(users));
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                
+                // 更新界面
+                showUserInfo();
+                displayMemberList();
+                displayPersonalHomepage();
+                
+                showNotification('头衔已更新');
+            }
+        }
+        
+        // 显示个人主页
+        function displayPersonalHomepage() {
+            if (!currentUser) return;
+            
+            const stats = userStats[currentUser.username] || {
+                posts: 0,
+                followers: 0,
+                following: 0,
+                likes: 0
+            };
+            
+            personalHomepage.innerHTML = `
+                <div class="homepage-header">
+                    <div class="homepage-avatar" id="homepageAvatar">
+                        <!-- 头像将在这里显示 -->
+                    </div>
+                    <div class="homepage-user-info">
+                        <div class="homepage-name">${currentUser.displayName}</div>
+                        <div class="homepage-title">${currentUser.title}</div>
+                        <div class="homepage-bio">${currentUser.bio || '这个用户很神秘，什么都没有留下...'}</div>
+                        <div class="homepage-stats">
+                            <div class="homepage-stat">
+                                <div class="homepage-stat-value">${stats.posts}</div>
+                                <div class="homepage-stat-label">帖子</div>
+                            </div>
+                            <div class="homepage-stat">
+                                <div class="homepage-stat-value">${stats.followers}</div>
+                                <div class="homepage-stat-label">关注者</div>
+                            </div>
+                            <div class="homepage-stat">
+                                <div class="homepage-stat-value">${stats.following}</div>
+                                <div class="homepage-stat-label">关注中</div>
+                            </div>
+                            <div class="homepage-stat">
+                                <div class="homepage-stat-value">${stats.likes}</div>
+                                <div class="homepage-stat-label">获赞</div>
+                            </div>
+                        </div>
+                        <div class="homepage-actions">
+                            <button class="btn btn-primary" id="editHomepageBtn">编辑个人资料</button>
+                            <button class="btn btn-secondary" id="shareHomepageBtn">分享主页</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="homepage-content">
+                    <div class="homepage-section">
+                        <h3 class="homepage-section-title">我的动态</h3>
+                        <p>这里将显示您的最新动态和活动记录。</p>
+                    </div>
+                    <div class="homepage-section">
+                        <h3 class="homepage-section-title">我的成就</h3>
+                        <div id="homepageAchievements">
+                            <!-- 成就将在这里显示 -->
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // 更新头像显示
+            updateAvatarDisplay(document.getElementById('homepageAvatar'), currentUser);
+            
+            // 更新成就显示
+            const homepageAchievements = document.getElementById('homepageAchievements');
+            const achievements = userAchievements[currentUser.username] || [];
+            
+            if (achievements.length === 0) {
+                homepageAchievements.innerHTML = '<p>暂无成就</p>';
+            } else {
+                achievements.forEach(achievement => {
+                    if (achievement.unlocked) {
+                        const achievementItem = document.createElement('div');
+                        achievementItem.className = 'achievement-item';
+                        achievementItem.innerHTML = `
+                            <div class="achievement-icon">${achievement.icon}</div>
+                            <div class="achievement-info">
+                                <div class="achievement-name">${achievement.name}</div>
+                                <div class="achievement-description">${achievement.description}</div>
+                            </div>
+                        `;
+                        homepageAchievements.appendChild(achievementItem);
+                    }
+                });
+            }
+            
+            // 添加事件监听器
+            document.getElementById('editHomepageBtn').addEventListener('click', showProfileModal);
+            document.getElementById('shareHomepageBtn').addEventListener('click', shareHomepage);
+            
+            // 显示个人主页
+            personalHomepage.style.display = 'block';
+        }
+        
+        // 分享个人主页
+        function shareHomepage() {
+            if (!currentUser) return;
+            
+            // 在实际应用中，这里可以实现分享功能
+            showNotification('主页链接已复制到剪贴板（演示功能）');
+            
+            // 模拟复制链接到剪贴板
+            const homepageUrl = `${window.location.origin}${window.location.pathname}?user=${currentUser.username}`;
+            navigator.clipboard.writeText(homepageUrl).then(() => {
+                showNotification('主页链接已复制到剪贴板');
+            }).catch(() => {
+                showNotification('复制失败，请手动复制链接');
+            });
+        }
+        
+        // 切换侧边栏显示/隐藏
+        function toggleSidebar() {
+            memberSidebar.classList.toggle('active');
+        }
+        
+        // 显示管理员面板
+        function showAdminPanel() {
+            adminPanel.style.display = 'block';
+        }
+        
+        // 隐藏管理员面板
+        function hideAdminPanel() {
+            adminPanel.style.display = 'none';
+        }
+        
+        // 切换背景
+        function changeBackground() {
+            currentBgIndex = (currentBgIndex + 1) % backgroundStyles.length;
+            document.body.style.background = backgroundStyles[currentBgIndex];
+            showNotification('背景已更换');
+        }
+        
+        // 以下是原有的功能函数，保持不变
+        // 显示消息中心浮窗
+        function showMessagesModal() {
+            if (!currentUser) return;
+            
+            // 显示所有消息
+            displayMessages('all');
+            
+            // 显示浮窗
+            messagesModal.style.display = 'block';
+            
+            // 标记消息为已读
+            markAllMessagesAsRead();
+        }
+        
+        // 隐藏消息中心浮窗
+        function hideMessagesModal() {
+            messagesModal.style.display = 'none';
+        }
+        
+        // 显示消息列表
+        function displayMessages(filter = 'all') {
+            if (!currentUser) return;
+            
+            const userMessages = messages.filter(msg => 
+                msg.to === currentUser.username || 
+                (msg.type === 'system' && msg.to === 'all')
+            );
+            
+            let filteredMessages = userMessages;
+            
+            if (filter === 'unread') {
+                filteredMessages = userMessages.filter(msg => !msg.read);
+            } else if (filter === 'system') {
+                filteredMessages = userMessages.filter(msg => msg.type === 'system');
+            }
+            
+            messagesList.innerHTML = '';
+            
+            if (filteredMessages.length === 0) {
+                messagesList.innerHTML = '<p class="no-messages">暂无消息</p>';
+                return;
+            }
+            
+            // 按时间倒序排列
+            filteredMessages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            filteredMessages.forEach(message => {
+                const messageItem = document.createElement('div');
+                messageItem.className = `message-item ${!message.read ? 'unread' : ''}`;
+                messageItem.dataset.id = message.id;
+                
+                const messageTime = new Date(message.timestamp).toLocaleString();
+                
+                messageItem.innerHTML = `
+                    <div class="message-header">
+                        <div class="message-sender">${message.from}</div>
+                        <div class="message-time">${messageTime}</div>
+                    </div>
+                    <div class="message-preview">${message.content}</div>
+                    <div class="message-actions">
+                        <button class="btn btn-message btn-primary mark-read-btn">${message.read ? '已读' : '标记已读'}</button>
+                        <button class="btn btn-message btn-danger delete-message-btn">删除</button>
+                    </div>
+                `;
+                
+                messagesList.appendChild(messageItem);
+                
+                // 添加事件监听器
+                const markReadBtn = messageItem.querySelector('.mark-read-btn');
+                const deleteMessageBtn = messageItem.querySelector('.delete-message-btn');
+                
+                markReadBtn.addEventListener('click', function() {
+                    markMessageAsRead(message.id);
+                });
+                
+                deleteMessageBtn.addEventListener('click', function() {
+                    deleteMessage(message.id);
+                });
+            });
+        }
+        
+        // 标记消息为已读
+        function markMessageAsRead(messageId) {
+            const messageIndex = messages.findIndex(msg => msg.id === messageId);
+            if (messageIndex !== -1) {
+                messages[messageIndex].read = true;
+                localStorage.setItem('gardenMessages', JSON.stringify(messages));
+                
+                // 更新界面
+                displayMessages(document.querySelector('.messages-tab.active').getAttribute('data-tab'));
+                updateMessageBadge();
+            }
+        }
+        
+        // 标记所有消息为已读
+        function markAllMessagesAsRead() {
+            messages.forEach(message => {
+                if ((message.to === currentUser.username || 
+                    (message.type === 'system' && message.to === 'all')) && 
+                    !message.read) {
+                    message.read = true;
+                }
+            });
+            
+            localStorage.setItem('gardenMessages', JSON.stringify(messages));
+            
+            // 更新界面
+            displayMessages(document.querySelector('.messages-tab.active').getAttribute('data-tab'));
+            updateMessageBadge();
+            
+            showNotification('所有消息已标记为已读');
+        }
+        
+        // 删除消息
+        function deleteMessage(messageId) {
+            const messageIndex = messages.findIndex(msg => msg.id === messageId);
+            if (messageIndex !== -1) {
+                messages.splice(messageIndex, 1);
+                localStorage.setItem('gardenMessages', JSON.stringify(messages));
+                
+                // 更新界面
+                displayMessages(document.querySelector('.messages-tab.active').getAttribute('data-tab'));
+                updateMessageBadge();
+                
+                showNotification('消息已删除');
+            }
+        }
+        
+        // 删除所有消息
+        function deleteAllMessages() {
+            if (!confirm('确定要删除所有消息吗？此操作不可恢复。')) {
+                return;
+            }
+            
+            // 只删除当前用户的消息
+            messages = messages.filter(msg => 
+                !(msg.to === currentUser.username || 
+                (msg.type === 'system' && msg.to === 'all'))
+            );
+            
+            localStorage.setItem('gardenMessages', JSON.stringify(messages));
+            
+            // 更新界面
+            displayMessages(document.querySelector('.messages-tab.active').getAttribute('data-tab'));
+            updateMessageBadge();
+            
+            showNotification('所有消息已删除');
+        }
+        
+        // 更新消息徽章
+        function updateMessageBadge() {
+            if (!currentUser) return;
+            
+            const unreadCount = messages.filter(msg => 
+                (msg.to === currentUser.username || 
+                (msg.type === 'system' && msg.to === 'all')) && 
+                !msg.read
+            ).length;
+            
+            if (unreadCount > 0) {
+                messageBadge.textContent = unreadCount;
+                messageBadge.style.display = 'flex';
+            } else {
+                messageBadge.style.display = 'none';
+            }
+        }
+        
+        // 更新头像显示
+        function updateAvatarDisplay(container, user) {
+            container.innerHTML = '';
+            
+            // 如果有自定义头像，使用自定义头像
+            if (user.avatar) {
+                const avatarImg = document.createElement('img');
+                avatarImg.src = user.avatar;
+                avatarImg.style.width = '100%';
+                avatarImg.style.height = '100%';
+                avatarImg.style.objectFit = 'cover';
+                avatarImg.style.borderRadius = '50%';
+                container.appendChild(avatarImg);
+            } else {
+                // 否则使用用户名首字母
+                const firstChar = user.displayName.charAt(0).toUpperCase();
+                const defaultAvatar = document.createElement('div');
+                defaultAvatar.className = 'default-avatar';
+                defaultAvatar.textContent = firstChar;
+                defaultAvatar.style.width = '100%';
+                defaultAvatar.style.height = '100%';
+                defaultAvatar.style.display = 'flex';
+                defaultAvatar.style.alignItems = 'center';
+                defaultAvatar.style.justifyContent = 'center';
+                defaultAvatar.style.color = 'white';
+                defaultAvatar.style.fontWeight = 'bold';
+                
+                // 根据容器大小设置字体大小
+                if (container.classList.contains('profile-avatar') || container.classList.contains('homepage-avatar')) {
+                    defaultAvatar.style.fontSize = '2rem';
+                } else if (container.classList.contains('user-avatar')) {
+                    defaultAvatar.style.fontSize = '1.1rem';
+                } else {
+                    defaultAvatar.style.fontSize = '1.8rem';
+                }
+                
+                defaultAvatar.style.backgroundColor = '#3498db';
+                defaultAvatar.style.borderRadius = '50%';
+                container.appendChild(defaultAvatar);
+            }
+        }
+        
+        // 显示成员列表
+        function displayMemberList() {
+            memberList.innerHTML = '';
+            
+            // 如果用户未登录，不显示成员列表
+            if (!currentUser) {
+                loginPrompt.style.display = 'block';
+                return;
+            }
+            
+            loginPrompt.style.display = 'none';
+            
+            // 按在线状态排序（在线用户在前）
+            const sortedUsers = [...users].sort((a, b) => {
+                if (a.isOnline && !b.isOnline) return -1;
+                if (!a.isOnline && b.isOnline) return 1;
+                return 0;
+            });
+            
+            // 计算在线人数
+            const onlineUsers = users.filter(user => user.isOnline).length;
+            onlineCount.textContent = `在线成员: ${onlineUsers}/${users.length}`;
+            
+            sortedUsers.forEach(user => {
+                const memberItem = document.createElement('div');
+                memberItem.className = 'member-item';
+                memberItem.dataset.username = user.username;
+                
+                // 创建头像元素
+                const avatarDiv = document.createElement('div');
+                avatarDiv.className = 'member-avatar';
+                
+                // 使用更新头像显示函数
+                updateAvatarDisplay(avatarDiv, user);
+                
+                // 根据用户类型设置不同的标题样式
+                let titleHtml = '';
+                if (user.isSuperAdmin) {
+                    titleHtml = `<div class="member-title"><span class="super-admin-title">${user.title}</span></div>`;
+                } else if (user.isAdmin) {
+                    titleHtml = `<div class="member-title"><span class="admin-title">${user.title}</span></div>`;
+                } else {
+                    titleHtml = `<div class="member-title">${user.title}</div>`;
+                }
+                
+                memberItem.innerHTML = `
+                    <div class="member-info">
+                        <div class="member-name">${user.displayName}</div>
+                        ${titleHtml}
+                        <div class="member-uid">UID: ${user.uid}</div>
+                    </div>
+                    <div class="member-status ${user.isOnline ? 'status-online' : 'status-offline'}"></div>
+                `;
+                
+                // 将头像插入到正确位置
+                memberItem.insertBefore(avatarDiv, memberItem.firstChild);
+                
+                // 添加点击事件查看用户资料
+                memberItem.addEventListener('click', function() {
+                    showUserProfile(user.username);
+                });
+                
+                memberList.appendChild(memberItem);
+            });
+        }
+        
+        // 以下是原有的登录、注册等功能函数，保持不变
+        // 登录处理函数
+        function handleLogin() {
+            // 设置按钮加载状态
+            setButtonLoading(loginBtn, true);
+            
+            // 隐藏之前的反馈信息
+            hideLoginFeedback();
+            
+            // 重置错误状态
+            resetErrors();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            let isValid = true;
+            
+            // 验证用户名
+            if (!username) {
+                showError(usernameError, '用户名不能为空');
+                isValid = false;
+            }
+            
+            // 验证密码
+            if (!password) {
+                showError(passwordError, '密码不能为空');
+                isValid = false;
+            }
+            
+            if (!isValid) {
+                setButtonLoading(loginBtn, false);
+                return;
+            }
+            
+            // 模拟网络延迟
+            setTimeout(() => {
+                const user = users.find(u => u.username === username && u.password === password);
+                
+                if (user) {
+                    currentUser = user;
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    
+                    // 记住登录状态
+                    if (rememberMe.checked) {
+                        localStorage.setItem('rememberedUser', username);
+                    } else {
+                        localStorage.removeItem('rememberedUser');
+                    }
+                    
+                    updateUserStatus(username, true);
+                    showUserInfo();
+                    displayMemberList();
+                    updateMessageBadge();
+                    displayPersonalHomepage();
+                    
+                    showLoginSuccess('登录成功！');
+                } else {
+                    showLoginError('用户名或密码错误');
+                }
+                
+                setButtonLoading(loginBtn, false);
+            }, 1000);
+        }
+        
+        // 注册按钮事件
+        function handleRegister() {
+            // 设置按钮加载状态
+            setButtonLoading(registerBtn, true);
+            
+            // 隐藏之前的反馈信息
+            hideLoginFeedback();
+            
+            // 重置错误状态
+            resetErrors();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            let isValid = true;
+            
+            // 验证用户名
+            if (!username) {
+                showError(usernameError, '用户名不能为空');
+                isValid = false;
+            } else if (username.length < 3) {
+                showError(usernameError, '用户名至少需要3个字符');
+                isValid = false;
+            } else if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+                showError(usernameError, '用户名只能包含字母、数字和下划线');
+                isValid = false;
+            }
+            
+            // 验证密码
+            if (!password) {
+                showError(passwordError, '密码不能为空');
+                isValid = false;
+            } else if (password.length < 6) {
+                showError(passwordError, '密码至少需要6个字符');
+                isValid = false;
+            }
+            
+            if (!isValid) {
+                setButtonLoading(registerBtn, false);
+                return;
+            }
+            
+            if (users.find(u => u.username === username)) {
+                showLoginError('用户名已存在');
+                setButtonLoading(registerBtn, false);
+                return;
+            }
+            
+            // 模拟网络延迟
+            setTimeout(() => {
+                const newUser = {
+                    id: Date.now(),
+                    username: username,
+                    password: password,
+                    displayName: username,
+                    title: '花园访客',
+                    avatar: null,
+                    isAdmin: false,
+                    isSuperAdmin: false,
+                    isOnline: true,
+                    lastSeen: new Date().toISOString(),
+                    uid: generateUniqueUID(),
+                    bio: '这个用户很神秘，什么都没有留下...',
+                    joinDate: new Date().toISOString(),
+                    lastActive: new Date().toISOString(),
+                    availableTitles: [1]
+                };
+                
+                users.push(newUser);
+                localStorage.setItem('gardenUsers', JSON.stringify(users));
+                
+                // 初始化用户统计
+                userStats[username] = {
+                    posts: 0,
+                    followers: 0,
+                    following: 0,
+                    likes: 0
+                };
+                localStorage.setItem('gardenStats', JSON.stringify(userStats));
+                
+                // 初始化用户成就
+                userAchievements[username] = [
+                    { id: 1, name: '创始者', description: '花园的创建者', icon: '👑', unlocked: false },
+                    { id: 2, name: '活跃用户', description: '发布10个以上帖子', icon: '💬', unlocked: false },
+                    { id: 3, name: '社交达人', description: '拥有20个以上关注者', icon: '🤝', unlocked: false },
+                    { id: 4, name: '人气之星', description: '获得100个以上点赞', icon: '⭐', unlocked: false }
+                ];
+                localStorage.setItem('gardenAchievements', JSON.stringify(userAchievements));
+                
+                currentUser = newUser;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                
+                // 记住登录状态
+                if (rememberMe.checked) {
+                    localStorage.setItem('rememberedUser', username);
+                } else {
+                    localStorage.removeItem('rememberedUser');
+                }
+                
+                // 发送欢迎消息
+                const welcomeMessage = {
+                    id: Date.now(),
+                    from: '系统',
+                    to: username,
+                    content: '欢迎加入Rin的秘密花园！希望您在这里度过愉快的时光。',
+                    timestamp: new Date().toISOString(),
+                    read: false,
+                    type: 'system'
+                };
+                messages.push(welcomeMessage);
+                localStorage.setItem('gardenMessages', JSON.stringify(messages));
+                
+                showUserInfo();
+                displayMemberList();
+                updateMessageBadge();
+                displayPersonalHomepage();
+                
+                showLoginSuccess(`注册成功！您的UID是：${newUser.uid}`);
+                setButtonLoading(registerBtn, false);
+            }, 1000);
+        }
+        
+        // 退出登录事件
+        function handleLogout() {
+            if (currentUser) {
+                updateUserStatus(currentUser.username, false);
+            }
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('rememberedUser');
+            showLoginForm();
+            displayMemberList();
+            personalHomepage.style.display = 'none';
+            showNotification('已退出登录');
+        }
+        
+        // 显示登录表单
+        function showLoginForm() {
+            sidebarLoginForm.style.display = 'block';
+            sidebarUserInfo.style.display = 'none';
+            adminPanel.style.display = 'none';
+            loginPrompt.style.display = 'block';
+            
+            // 重置表单
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            resetErrors();
+            hideLoginFeedback();
+        }
+        
+        // 显示用户信息
+        function showUserInfo() {
+            sidebarLoginForm.style.display = 'none';
+            sidebarUserInfo.style.display = 'block';
+            loginPrompt.style.display = 'none';
+            
+            document.getElementById('displayName').textContent = currentUser.displayName;
+            document.getElementById('userUid').textContent = `UID: ${currentUser.uid}`;
+            
+            // 根据用户类型设置不同的标题样式
+            const userTitleElement = document.getElementById('userTitle');
+            if (currentUser.isSuperAdmin) {
+                userTitleElement.innerHTML = `<span class="super-admin-title">${currentUser.title}</span>`;
+            } else if (currentUser.isAdmin) {
+                userTitleElement.innerHTML = `<span class="admin-title">${currentUser.title}</span>`;
+            } else {
+                userTitleElement.textContent = currentUser.title;
+            }
+            
+            // 更新用户头像显示
+            updateAvatarDisplay(userAvatar, currentUser);
+            
+            // 如果是超级管理员，显示管理员面板按钮
+            if (currentUser.isSuperAdmin) {
+                adminPanelBtn.style.display = 'block';
+            } else {
+                adminPanelBtn.style.display = 'none';
+            }
+        }
+        
+        // 更新用户在线状态
+        function updateUserStatus(username, isOnline) {
+            const userIndex = users.findIndex(u => u.username === username);
+            if (userIndex !== -1) {
+                users[userIndex].isOnline = isOnline;
+                users[userIndex].lastSeen = new Date().toISOString();
+                users[userIndex].lastActive = new Date().toISOString();
+                localStorage.setItem('gardenUsers', JSON.stringify(users));
+            }
+        }
+        
+        // 生成4位随机UID的函数
+        function generateRandomUID() {
+            return Math.floor(1000 + Math.random() * 9000);
+        }
+        
+        // 生成唯一UID的函数
+        function generateUniqueUID() {
+            let uid;
+            let usedUIDs = users.map(user => user.uid);
+            
+            // 确保新生成的UID不重复且不是1314
+            do {
+                uid = generateRandomUID();
+            } while (usedUIDs.includes(uid) || uid === 1314);
+            
+            return uid;
+        }
+        
+        // 显示登录成功信息
+        function showLoginSuccess(message) {
+            loginSuccess.textContent = message;
+            loginSuccess.style.display = 'block';
+            loginError.style.display = 'none';
+        }
+        
+        // 显示登录错误信息
+        function showLoginError(message) {
+            loginError.textContent = message;
+            loginError.style.display = 'block';
+            loginSuccess.style.display = 'none';
+        }
+        
+        // 隐藏登录反馈信息
+        function hideLoginFeedback() {
+            loginSuccess.style.display = 'none';
+            loginError.style.display = 'none';
+        }
+        
+        // 显示错误信息
+        function showError(errorElement, message) {
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            errorElement.previousElementSibling.classList.add('error');
+        }
+        
+        // 隐藏错误信息
+        function hideError(errorElement) {
+            errorElement.style.display = 'none';
+            errorElement.previousElementSibling.classList.remove('error');
+        }
+        
+        // 重置所有错误状态
+        function resetErrors() {
+            hideError(usernameError);
+            hideError(passwordError);
+        }
+        
+        // 设置按钮加载状态
+        function setButtonLoading(button, isLoading) {
+            if (isLoading) {
+                button.disabled = true;
+                const originalText = button.textContent;
+                button.dataset.originalText = originalText;
+                button.innerHTML = '<span class="loading-spinner"></span> 处理中...';
+            } else {
+                button.disabled = false;
+                if (button.dataset.originalText) {
+                    button.textContent = button.dataset.originalText;
+                }
+            }
+        }
+        
+        // 显示通知
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            
+            if (type === 'error') {
+                notification.style.background = '#e74c3c';
+            } else if (type === 'warning') {
+                notification.style.background = '#f39c12';
+            }
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+        
+        // 页面关闭时更新用户状态为离线
+        window.addEventListener('beforeunload', function() {
+            if (currentUser) {
+                updateUserStatus(currentUser.username, false);
+            }
+        });
+        
+        // 忘记密码功能
+        forgotPassword.addEventListener('click', function() {
+            const username = document.getElementById('username').value;
+            
+            if (!username) {
+                showLoginError('请输入用户名以找回密码');
+                return;
+            }
+            
+            const user = users.find(u => u.username === username);
+            if (!user) {
+                showLoginError('用户不存在');
+                return;
+            }
+            
+            // 在实际应用中，这里应该发送邮件或短信
+            showLoginSuccess(`密码重置链接已发送到与 ${username} 关联的邮箱（演示功能）`);
+        });
+        
+        // 游客登录功能
+        guestLoginBtn.addEventListener('click', function() {
+            // 创建一个临时游客账户
+            const guestUsername = `游客_${Math.floor(Math.random() * 10000)}`;
+            const guestPassword = 'guest123';
+            
+            // 检查是否已存在该游客账户
+            if (!users.find(u => u.username === guestUsername)) {
+                const guestUser = {
+                    id: Date.now(),
+                    username: guestUsername,
+                    password: guestPassword,
+                    displayName: '花园游客',
+                    title: '临时访客',
+                    avatar: null,
+                    isAdmin: false,
+                    isSuperAdmin: false,
+                    isOnline: true,
+                    lastSeen: new Date().toISOString(),
+                    uid: generateUniqueUID(),
+                    bio: '这是一个临时游客账户',
+                    joinDate: new Date().toISOString(),
+                    lastActive: new Date().toISOString(),
+                    availableTitles: [1]
+                };
+                
+                users.push(guestUser);
+                localStorage.setItem('gardenUsers', JSON.stringify(users));
+                
+                // 初始化用户统计
+                userStats[guestUsername] = {
+                    posts: 0,
+                    followers: 0,
+                    following: 0,
+                    likes: 0
+                };
+                localStorage.setItem('gardenStats', JSON.stringify(userStats));
+                
+                // 初始化用户成就
+                userAchievements[guestUsername] = [
+                    { id: 1, name: '创始者', description: '花园的创建者', icon: '👑', unlocked: false },
+                    { id: 2, name: '活跃用户', description: '发布10个以上帖子', icon: '💬', unlocked: false },
+                    { id: 3, name: '社交达人', description: '拥有20个以上关注者', icon: '🤝', unlocked: false },
+                    { id: 4, name: '人气之星', description: '获得100个以上点赞', icon: '⭐', unlocked: false }
+                ];
+                localStorage.setItem('gardenAchievements', JSON.stringify(userAchievements));
+            }
+            
+            // 自动填充表单
+            document.getElementById('username').value = guestUsername;
+            document.getElementById('password').value = guestPassword;
+            
+            showLoginSuccess(`已为您创建临时游客账户：${guestUsername}，密码：${guestPassword}`);
+        });
+        
+        // 管理员功能
+        function promoteUser() {
+            if (!currentUser || !currentUser.isSuperAdmin) {
+                showNotification('您没有权限执行此操作', 'error');
+                return;
+            }
+            
+            const username = promoteUsername.value.trim();
+            if (!username) {
+                showNotification('请输入用户名', 'error');
+                return;
+            }
+            
+            const userIndex = users.findIndex(u => u.username === username);
+            if (userIndex === -1) {
+                showNotification('用户不存在', 'error');
+                return;
+            }
+            
+            if (users[userIndex].isAdmin) {
+                showNotification('该用户已经是管理员', 'error');
+                return;
+            }
+            
+            users[userIndex].isAdmin = true;
+            users[userIndex].title = '花园管理员';
+            
+            // 添加管理员头衔
+            if (!users[userIndex].availableTitles.includes(5)) {
+                users[userIndex].availableTitles.push(5);
+            }
+            
+            localStorage.setItem('gardenUsers', JSON.stringify(users));
+            
+            // 发送系统消息
+            const systemMessage = {
+                id: Date.now(),
+                from: '系统',
+                to: username,
+                content: '恭喜！您已被提升为花园管理员。',
+                timestamp: new Date().toISOString(),
+                read: false,
+                type: 'system'
+            };
+            messages.push(systemMessage);
+            localStorage.setItem('gardenMessages', JSON.stringify(messages));
+            
+            showNotification(`已成功将 ${username} 提升为管理员`);
+            promoteUsername.value = '';
+            
+            // 更新成员列表
+            displayMemberList();
+        }
+        
+        function backupData() {
+            const data = {
+                users: users,
+                messages: messages,
+                userStats: userStats,
+                userAchievements: userAchievements,
+                backupTime: new Date().toISOString()
+            };
+            
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const url = URL.createObjectURL(dataBlob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `garden_backup_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showNotification('数据备份成功');
+        }
+        
+        function restoreData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        
+                        if (data.users && data.messages && data.userStats && data.userAchievements) {
+                            users = data.users;
+                            messages = data.messages;
+                            userStats = data.userStats;
+                            userAchievements = data.userAchievements;
+                            
+                            localStorage.setItem('gardenUsers', JSON.stringify(users));
+                            localStorage.setItem('gardenMessages', JSON.stringify(messages));
+                            localStorage.setItem('gardenStats', JSON.stringify(userStats));
+                            localStorage.setItem('gardenAchievements', JSON.stringify(userAchievements));
+                            
+                            showNotification('数据恢复成功');
+                            
+                            // 刷新页面
+                            location.reload();
+                        } else {
+                            showNotification('备份文件格式不正确', 'error');
+                        }
+                    } catch (error) {
+                        showNotification('恢复数据时出错: ' + error.message, 'error');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            
+            input.click();
+        }
+        
+        // 检测是否在移动设备上，提供更合适的QQ链接
+        document.addEventListener('DOMContentLoaded', function() {
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            if (isMobile) {
+                const qqLinks = document.querySelectorAll('a[href*="wpa.qq.com"]');
+                qqLinks.forEach(link => {
+                    link.href = 'mqqapi://card/show_pslcard?src_type=internal&version=1&uin=3652637433&card_type=person&source=external';
+                });
+            }
+        });
+    </script>
+</body>
+</html>
